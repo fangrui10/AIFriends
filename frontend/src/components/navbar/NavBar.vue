@@ -1,5 +1,5 @@
 <script setup>
-import { userUserStore } from '@/stores/user';
+import { useUserStore } from '@/stores/user';
 import CreateIcon from './icons/CreateIcon.vue';
 import FriendIcon from './icons/FriendIcon.vue';
 import HomepageIcon from './icons/HomepageIcon.vue';
@@ -7,7 +7,7 @@ import MenuIcon from './icons/MenuIcon.vue';
 import SearchIcon from './icons/SearchIcon.vue';
 import UserMenu from './UserMenu.vue';
 
-const user = userUserStore();
+const user = useUserStore();
 </script>
 
 <template>

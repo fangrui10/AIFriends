@@ -1,16 +1,32 @@
 <script setup>
-import { userUserStore } from '@/stores/user';
+import { useUserStore } from '@/stores/user';
 import UserSpaceIcon from './icons/UserSpaceIcon.vue';
 import UserProfileIcon from './icons/UserProfileIcon.vue';
 import UserLogoutIcon from './icons/UserLogoutIcon.vue';
+import api from '@/js/http/api';
+import { useRouter } from 'vue-router';
 
 
-const user = userUserStore();
+const user = useUserStore();
+const router = useRouter();
 
 function closeMenu(){
     const element = document.activeElement;
     if (element && element instanceof HTMLElement) {
         element.blur();
+    }
+}
+
+async function handleLogout() {
+    try{
+        const res = await api.post('/api/user/account/logout/')
+        if (res.data.result === 'success') {
+            user.logout();
+            await router.push({ name: 'homepage-index' });
+        }
+    }
+    catch(err){
+        console.log(err)
     }
 }
 </script>
@@ -47,7 +63,7 @@ function closeMenu(){
             </li>
             <li></li>
             <li>
-                <a  @click="closeMenu" class="text-sm font-bold py-3">
+                <a  @click="handleLogout" class="text-sm font-bold py-3">
                     <UserLogoutIcon />
                     退出登录
                 </a>

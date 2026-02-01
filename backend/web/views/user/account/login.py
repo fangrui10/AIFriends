@@ -9,7 +9,7 @@ from web.models.user import UserProfile
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
         try:
-            username = request.data.get("user").strip()
+            username = request.data.get("username").strip()
             password = request.data.get("password").strip()
             if not username or not password:
                 return Response({
@@ -33,16 +33,15 @@ class LoginView(APIView):
                     httponly = True,
                     samesite = 'Lax',
                     secure = True,
-                    max_age = 7 * 24 * 60 * 60, # 七天
+                    max_age = 86400 * 7, # 七天
                 )
                 return response
-            
             return Response({
                 "result": "用户名或密码错误"
             })
-
-
         except:
+            import traceback
+            print(traceback.format_exc())
             return Response({
                 "result": "系统异常，请稍后重试"
             })
