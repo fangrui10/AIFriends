@@ -1,10 +1,13 @@
 <script setup>
+import { userUserStore } from '@/stores/user';
 import CreateIcon from './icons/CreateIcon.vue';
 import FriendIcon from './icons/FriendIcon.vue';
 import HomepageIcon from './icons/HomepageIcon.vue';
 import MenuIcon from './icons/MenuIcon.vue';
 import SearchIcon from './icons/SearchIcon.vue';
+import UserMenu from './UserMenu.vue';
 
+const user = userUserStore();
 </script>
 
 <template>
@@ -28,9 +31,14 @@ import SearchIcon from './icons/SearchIcon.vue';
                     </div>
                 </div>
                 <div class="navbar-end">
-                    <RouterLink :to="{name: 'user-account-login-index'}" active-class="btn-active" class="btn btn-ghost text-lg">
+                    <RouterLink v-if="user.isLogin()" :to="{name: 'create-index'}" active-class="btn-active" class="btn btn-ghost text-base mr-6">
+                        <CreateIcon />
+                        创作
+                    </RouterLink>
+                    <RouterLink v-if="!user.isLogin()" :to="{name: 'user-account-login-index'}" active-class="btn-active" class="btn btn-ghost text-lg">
                         登录
                     </RouterLink>
+                    <UserMenu v-else />
                 </div>
 
             </nav>
