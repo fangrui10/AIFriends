@@ -1,15 +1,13 @@
-<template>
-    <div>
-        创作页面
-    </div>
-</template>
+<script setup>
+import CreateCharacter from './character/CreateCharacter.vue';
 
-<script>
-    export default {
-        
-    }
+
 </script>
 
-<style lang="scss" scoped>
+<template>
+    <CreateCharacter />
+</template>
+
+<style scoped>
 
 </style>
