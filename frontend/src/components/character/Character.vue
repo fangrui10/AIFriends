@@ -7,7 +7,7 @@ import api from '@/js/http/api';
 import ChatField from './chat_field/ChatField.vue';
 import { useRouter } from 'vue-router';
 
-const props = defineProps(['character', 'canEdit'])
+const props = defineProps(['character', 'canEdit', 'canRemoveFriend', 'friendId'])
 const emit = defineEmits(['remove'])
 const isHover = ref(false)
 const user = useUserStore()
@@ -20,6 +20,19 @@ async function handleRemoveCharacter() {
         })
         if (res.data.result === 'success') {
             emit('remove', props.character.id)
+        }
+    } catch (err) {
+    }
+}
+
+
+async function handleRemoveFriend() {
+    try {
+        const res = await api.post('/api/friend/remove/', {
+            friend_id: props.friendId
+        })
+        if (res.data.result === 'success') {
+            emit('remove', props.friendId)
         }
     } catch (err) {
     }
@@ -44,7 +57,6 @@ async function openChatField() {
                 chatFieldRef.value.showModal()
             }
         } catch (err) {
-            console.error(err)   
         }
     }
 }
@@ -59,12 +71,19 @@ async function openChatField() {
                 
                 
                 <div v-if="canEdit && character.author.user_id === user.id" class="absolute right-0 top-50">
-                    <RouterLink :to="{name: 'update-character', params: {character_id: character.id}}" class="btn btn-circle btn-ghost bg-transparent">
+                    <RouterLink @click.stop :to="{name: 'update-character', params: {character_id: character.id}}" class="btn btn-circle btn-ghost bg-transparent">
                         <UpdateIcon/>
                     </RouterLink>
-                    <button @click="handleRemoveCharacter" class="btn btn-circle btn-ghost bg-transparent">
+                    <button @click.stop="handleRemoveCharacter" class="btn btn-circle btn-ghost bg-transparent">
                         <RemoveIcon />
                     </button>
+                </div>
+
+                <div v-if="canRemoveFriend" class="absolute right-0 top-50">
+                    <button @click.stop="handleRemoveFriend" class="btn btn-circle btn-ghost bg-transparent">
+                        <RemoveIcon />
+                    </button>
+
                 </div>
 
                 <div class="absolute left-4 top-54 avatar">
