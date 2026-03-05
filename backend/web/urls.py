@@ -4,6 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from web.views.friend.message.chat.chat import MessageChatView
 from web.views.create.character.create import CreateCharacterView
 from web.views.create.character.get_list import GetListCharacterView
 from web.views.create.character.get_single import GetSingleCharacterView
@@ -39,6 +40,7 @@ urlpatterns = [
     path('api/friend/get_or_create/', GetOrCreateFriendView.as_view()),
     path('api/friend/remove/', RemoveFriendView.as_view()),
     path('api/friend/get_list/', GetListFriendView.as_view()),
+    path('api/friend/message/chat/', MessageChatView.as_view()),
     path('', index),
 
     re_path(r'^(?!media/|static/|assets/).*$', index), # 其他路径都交给前端路由处理
