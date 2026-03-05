@@ -22,5 +22,11 @@ class Message(models.Model):
     input = models.TextField(max_length=500)
     output = models.TextField(max_length=500)
     input_tokens = models.IntegerField(default=0)
+    output_tokens = models.IntegerField(default=0)
     total_tokens = models.IntegerField(default=0)
+    create_time = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return f"{self.friend.character.name} - {self.friend.me.user.username} - {self.user_message[:50]} - {localtime(self.create_time).strftime('%Y-%m-%d %H:%M:%S')}"
+
     
