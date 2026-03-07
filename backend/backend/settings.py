@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'web',
     'corsheaders',
+    'django_vite',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,13 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [  # 开发阶段使用，生产阶段需要注释掉
     BASE_DIR / 'static',
 ]
+
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": DEBUG,
+        "manifest_path": BASE_DIR / "static" / "frontend" / ".vite" / "manifest.json",
+    }
+}
 
 MEDIA_URL = 'http://127.0.0.1:8000/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
