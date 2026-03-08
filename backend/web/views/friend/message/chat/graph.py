@@ -1,4 +1,3 @@
-from pprint import pprint
 from typing import Annotated, TypedDict, Sequence
 from django.utils.timezone import localtime, now
 from langchain_core.messages import BaseMessage
@@ -37,7 +36,6 @@ class ChatGraph:
             messages: Annotated[Sequence[BaseMessage], add_messages]
         
         def model_call(state: AgentState) -> AgentState:
-            pprint(state)
             res = llm.invoke(state['messages'])
             return {'messages': [res]}
 
