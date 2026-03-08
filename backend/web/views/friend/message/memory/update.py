@@ -2,7 +2,6 @@ from django.utils.timezone import now
 from langchain_core.messages import HumanMessage, SystemMessage
 from web.models.friend import Message, SystemPrompt
 from web.views.friend.message.memory.graph import MemoryGraph
-from pprint import pprint
 
 
 def create_system_prompt():
@@ -33,11 +32,9 @@ def update_memory(friend):
             create_human_message(friend),
         ]
     }
-    pprint(inputs)
 
     res = app.invoke(inputs)
     friend.memory = res['messages'][-1].content
-    pprint(friend.memory)
 
     friend.update_time = now()
     friend.save()

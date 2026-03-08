@@ -10,3 +10,4 @@ __pycache__/
 *.env
 snaps/
 pyrightconfig.json
+backend/web/documents/
