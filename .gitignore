@@ -10,4 +10,5 @@ __pycache__/
 *.env
 snaps/
 pyrightconfig.json
-backend/web/documents/
+backend/web/documents/data.txt
+backend/web/documents/lancedb_storage/
