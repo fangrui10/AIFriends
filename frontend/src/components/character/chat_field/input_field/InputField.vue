@@ -2,29 +2,36 @@
 import streamApi from '@/js/http/streamApi';
 import MicIcon from '../../icons/MicIcon.vue';
 import SendIcon from '../../icons/SendIcon.vue';
+import Microphone from './Microphone.vue';
 import { ref, useTemplateRef } from 'vue';
 
 const props = defineProps(['friendId'])
 const emit = defineEmits(['pushBackMessage', 'addToLastMessage'])
 const inputRef = useTemplateRef('input-ref')
 const message = ref('')
-let isProcessing = false
+let processId = 0
+const showMic = ref(false)
+
 
 function focus() {
     inputRef.value.focus()
 }
 
 
-async function handleSend() {
-    if (isProcessing) return
-    isProcessing = true
-    const content = message.value.trim()
+async function handleSend(event, audio_msg) {
+    let content
+    if (audio_msg) {
+        content = audio_msg.trim()
+    } else {
+        content = message.value.trim()
+    }
     if (!content) return
 
+    const curId = ++processId
     message.value = ''
 
-    emit('pushBackMessage', {role: 'user', content: content, id: crypto.randomUUID()})
-    emit('pushBackMessage', {role: 'ai', content: '', id: crypto.randomUUID()})
+    emit('pushBackMessage', { role: 'user', content: content, id: crypto.randomUUID() })
+    emit('pushBackMessage', { role: 'ai', content: '', id: crypto.randomUUID() })
 
     try {
         await streamApi('/api/friend/message/chat/', {
@@ -33,40 +40,49 @@ async function handleSend() {
                 message: content,
             },
             onmessage(data, isDone) {
-                if (isDone) {
-                    isProcessing = false
-                } else if (data.content) {
+                if (curId !== processId) return
+                if (data.content) {
                     emit('addToLastMessage', data.content)
                 }
             },
             onerror(err) {
-                isProcessing = false
             },
 
         })
     } catch (err) {
-        isProcessing = false
     }
 
 }
 
+
+function close() {
+    ++ processId
+    showMic.value = false
+}
+
+function handleStop() {
+    ++ processId
+}
+
 defineExpose({
     focus,
+    close,
 })
 </script>
 
 <template>
-    <form @submit.prevent="handleSend" class="absolute bottom-4 left-2 h-12 w-86 flex items-center">
+    <form v-if="!showMic" @submit.prevent="handleSend" class="absolute bottom-4 left-2 h-12 w-86 flex items-center">
         <input v-model="message" ref="input-ref"
             class="input bg-black/30 backdrop-blur-sm text-white text-base w-full h-full rounded-2xl pr-20" type="text"
             placeholder="文本输入。。。">
         <div class="absolute right-2 w-8 h-8 flex items-center justify-center cursor-pointer">
             <SendIcon @click="handleSend" />
         </div>
-        <div class="absolute right-10 w-8 h-8 flex items-center justify-center cursor-pointer">
+        <div @click="showMic = true" class="absolute right-10 w-8 h-8 flex items-center justify-center cursor-pointer">
             <MicIcon />
         </div>
     </form>
+    <Microphone v-else @close="showMic=false" @send="handleSend" @stop="handleStop"/>
 </template>
 
 <style scoped></style>
