@@ -188,7 +188,6 @@ class MessageChatView(APIView):
             msg = mq.get()
             if not msg:
                 break
-            print(msg)
             if msg.get("content", None):
                 full_output += msg["content"]
                 yield f"data: {json.dumps({'content': msg['content']}, ensure_ascii=False)}\n\n"
